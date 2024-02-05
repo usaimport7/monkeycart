@@ -4,6 +4,13 @@ from datetime import datetime, timedelta
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
+import json
+from oauth2client.service_account import ServiceAccountCredentials
+
+# 環境変数からクレデンシャルを読み込む
+creds_json = os.getenv("GCP_SERVICE_ACCOUNT_CREDENTIALS")
+creds_dict = json.loads(creds_json)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
 # 環境変数からサービスアカウントキーのパスを取得
 creds_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')

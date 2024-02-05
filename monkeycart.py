@@ -213,3 +213,5 @@ if creds_json:
     print("First 100 characters of creds_json:", creds_json[:100])
 else:
     print("creds_json is None or empty.")
+
+print(creds_dict)

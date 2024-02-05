@@ -8,8 +8,15 @@ import json
 from oauth2client.service_account import ServiceAccountCredentials
 
 # 環境変数からクレデンシャルを読み込む
-creds_json = os.getenv("GCP_SERVICE_ACCOUNT_CREDENTIALS")
-creds_dict = json.loads(creds_json)
+creds_json = os.getenv("google_credentials")
+if creds_json is None:
+    raise Exception("The google_credentials environment variable is not set.")
+
+try:
+    creds_dict = json.loads(creds_json)
+except json.JSONDecodeError as e:
+    raise Exception("Error decoding google_credentials JSON.") from e
+
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
 # 環境変数からサービスアカウントキーのパスを取得
@@ -199,3 +206,10 @@ if st.button("Book & Pay by card", key="book_and_pay"):
         sheet.append_row([first_name_input, last_name_input, address, license_number, country, mobile_number, email_address, str(preferred_date), preferred_timeslot, str(how_many_people)])
         st.success("Your booking has been successfully submitted!")
         st.markdown("<a href='https://www.google.com' target='_blank'>Go to Google</a>", unsafe_allow_html=True)
+
+print(f"Type of creds_json: {type(creds_json)}")
+if creds_json:
+    print(f"Length of creds_json: {len(creds_json)}")
+    print("First 100 characters of creds_json:", creds_json[:100])
+else:
+    print("creds_json is None or empty.")

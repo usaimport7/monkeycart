@@ -5,7 +5,6 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
 import json
-from oauth2client.service_account import ServiceAccountCredentials
 
 # 環境変数からクレデンシャルを読み込む
 creds_json = os.getenv("google_credentials")
@@ -22,7 +21,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 # 環境変数からサービスアカウントキーのパスを取得
 creds_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name("soraiekart-f11049a5c177.json", scope)
 client = gspread.authorize(creds)
 
 # スプレッドシートを開く（ここでは'Sheet1'を使用）

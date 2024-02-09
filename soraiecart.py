@@ -1,39 +1,8 @@
 import streamlit as st
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import os
 import json
-
-# スコープの設定
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-
-# 環境変数ファイルの読み込み
-load_dotenv()
-# 環境変数からGoogleクレデンシャルを読み込む
-google_credentials = os.getenv("GOOGLE_CREDENTIALS")
-
-# 環境変数からクレデンシャルを読み込む
-creds_json = os.getenv("google_credentials")
-if creds_json is None:
-    raise Exception("The google_credentials environment variable is not set.")
-
-try:
-    creds_dict = json.loads(creds_json)
-except json.JSONDecodeError as e:
-    raise Exception("Error decoding google_credentials JSON.") from e
-
-# ServiceAccountCredentials オブジェクトの生成
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-
-# gspreadクライアントの認証
-client = gspread.authorize(creds)
-
-# スプレッドシートを開く（ここでは'Sheet1'を使用）
-sheet = client.open("soraiemonkeycart").sheet1
-
-print(json.dumps(creds_dict, indent=2))  # creds_dictをJSON形式で表示
 
 # アプリのタイトル
 st.title("Soraie Monkey Cart")
@@ -175,60 +144,16 @@ st.write("*If your country doesn't show up, I'm sorry but you cannot drive in Ja
 mobile_number = st.text_input("Mobile Number")
 email_address = st.text_input("Email Address")
 
-# 予約＆支払いボタン
-#if st.button("Book & Pay by card"):
-    # ここに支払い処理などのコードを追加することができます
-    # 今回例では、単純にGoogleのホームページにリダイレクトします
-  #  st.markdown("<a href='https://www.google.com' target='_blank'>Go to Google</a>", unsafe_allow_html=True)
+# Submit & Payボタン
+if st.button("Submit & Pay"):
+    # 重要情報が確認されているかどうかを確認
+    if important_info_checked:
+        # ここで入力された情報を使用して支払い処理などの必要な処理を行う
+        st.success("Your booking has been submitted. Please proceed with the payment.")
 
-# 予約＆支払いボタンがクリックされたときの処理
-#if st.button("Book & Pay by card"):
-    # 必須フィールドが適切に入力され、チェックボックスが選択されているかを確認
-    #if not first_name or not last_name or not address or not license_number or not country or not mobile_number or not email_address or not important_info_checked:
-        # 必須フィールドのいずれかが入力されていない、またはチェックボックスが選択されていない場合
-   #     st.error("Please fill in all the required fields and agree to the Important Information before proceeding.")
-   # else:
-        # すべての条件が満たされている場合、支払い処理などの次のステップへ進む
-        # ここに支払い処理などのコードを追加
-        # 今回の例では、単純にGoogleのホームページにリダイレクトするリンクを表示
-  #      st.markdown("<a href='https://www.google.com' target='_blank'>Go to Google</a>", unsafe_allow_html=True)
+        # 支払いページへのリンク
+        st.markdown("[Click here to proceed with the payment](https://example.com/payment)")
 
-# 予約＆支払いボタンがクリックされたときの処理
-if st.button("Book & Pay by card", key="book_and_pay"):
-    # 不足しているフィールドを追跡するリスト
-    missing_fields = []
-    if not first_name_input: missing_fields.append("First Name")
-    if not last_name_input: missing_fields.append("Last Name")
-    if not address: missing_fields.append("Address")
-    if not license_number: missing_fields.append("License Number")
-    # 他の必須フィールドに対するチェックもここに追加
-    if not important_info_checked: missing_fields.append("Important Information Agreement")
-
-    if missing_fields:
-        # 不足しているフィールドをユーザーに知らせる
-        st.error(f"Please fill in all the required fields: {', '.join(missing_fields)}")
     else:
-        # 全てのフィールドが適切に入力されている場合の処理
-        # スプレッドシートにデータを追加し、成功メッセージを表示
-        sheet.append_row([first_name_input, last_name_input, address, license_number, country, mobile_number, email_address, str(preferred_date), preferred_timeslot, str(how_many_people)])
-        st.success("Your booking has been successfully submitted!")
-        st.markdown("<a href='https://www.google.com' target='_blank'>Go to Google</a>", unsafe_allow_html=True)
+        st.error("Please read and agree to the Important Information before submitting.")
 
-print(f"Type of creds_json: {type(creds_json)}")
-if creds_json:
-    print(f"Length of creds_json: {len(creds_json)}")
-    print("First 100 characters of creds_json:", creds_json[:100])
-else:
-    print("creds_json is None or empty.")
-
-print(creds_dict)
-import os
-
-# 環境変数からクレデンシャルを読み込む
-creds_json = os.getenv("google_credentials")
-print("google_credentials:", creds_json)  # デバッグのために値を表示
-
-if creds_json is None:
-    raise Exception("The google_credentials environment variable is not set.")
-
-print("creds_json:", creds_json)

@@ -1,39 +1,24 @@
 import streamlit as st
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import os
 import json
 
-# スコープの設定
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+# Google Sheets認証情報の設定
+def authenticate_google_sheets():
+    scope = ['https://www.googleapis.com/auth/spreadsheets',
+             'https://www.googleapis.com/auth/drive']
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(r"C:\Users\ume27\my_app_monkeycart\soraiekart-f11049a5c177.json", scope)
+    gc = gspread.authorize(credentials)
+    return gc
 
-# 環境変数ファイルの読み込み
-load_dotenv()
-# 環境変数からGoogleクレデンシャルを読み込む
-google_credentials = os.getenv("GOOGLE_CREDENTIALS")
-
-# 環境変数からクレデンシャルを読み込む
-creds_json = os.getenv("google_credentials")
-if creds_json is None:
-    raise Exception("The google_credentials environment variable is not set.")
-
-try:
-    creds_dict = json.loads(creds_json)
-except json.JSONDecodeError as e:
-    raise Exception("Error decoding google_credentials JSON.") from e
-
-# ServiceAccountCredentials オブジェクトの生成
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-
-# gspreadクライアントの認証
-client = gspread.authorize(creds)
-
-# スプレッドシートを開く（ここでは'Sheet1'を使用）
-sheet = client.open("soraiemonkeycart").sheet1
-
-print(json.dumps(creds_dict, indent=2))  # creds_dictをJSON形式で表示
+# スプレッドシートにデータを追加する関数
+def append_data_to_sheet(sheet_name, data):
+    gc = authenticate_google_sheets()
+    worksheet = gc.open(sheet_name).sheet1  # スプレッドシート名とシート1を指定
+     # スプレッドシートの名前
+    sheet_name = 'soraiemonkeycart'
+    worksheet.append_row(data)
 
 # アプリのタイトル
 st.title("Soraie Monkey Cart")
@@ -213,22 +198,3 @@ if st.button("Book & Pay by card", key="book_and_pay"):
         sheet.append_row([first_name_input, last_name_input, address, license_number, country, mobile_number, email_address, str(preferred_date), preferred_timeslot, str(how_many_people)])
         st.success("Your booking has been successfully submitted!")
         st.markdown("<a href='https://www.google.com' target='_blank'>Go to Google</a>", unsafe_allow_html=True)
-
-print(f"Type of creds_json: {type(creds_json)}")
-if creds_json:
-    print(f"Length of creds_json: {len(creds_json)}")
-    print("First 100 characters of creds_json:", creds_json[:100])
-else:
-    print("creds_json is None or empty.")
-
-print(creds_dict)
-import os
-
-# 環境変数からクレデンシャルを読み込む
-creds_json = os.getenv("google_credentials")
-print("google_credentials:", creds_json)  # デバッグのために値を表示
-
-if creds_json is None:
-    raise Exception("The google_credentials environment variable is not set.")
-
-print("creds_json:", creds_json)

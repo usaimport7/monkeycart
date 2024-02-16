@@ -187,11 +187,11 @@ if st.button("Submit"):
             st.error(error)
     else:
     # ユーザー入力を変数に格納
-    name = first_name_input + " " + last_name_input
-    phone = mobile_number
-    email = email_address
-    reservation_date = preferred_date.strftime("%Y-%m-%d")
-    reservation_time = preferred_timeslot
+        name = first_name_input + " " + last_name_input
+        phone = mobile_number
+        email = email_address
+        reservation_date = preferred_date.strftime("%Y-%m-%d")
+        reservation_time = preferred_timeslot
     
     # 予約情報をスプレッドシートに記録
     sh = gc.open("soraiemonkeycart")

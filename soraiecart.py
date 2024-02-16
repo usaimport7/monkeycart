@@ -150,52 +150,34 @@ st.write("*If your country doesn't show up, I'm sorry but you cannot drive in Ja
 mobile_number = st.text_input("Mobile Number")
 email_address = st.text_input("Email Address")
 
-# 必須フィールドが適切に入力されているかどうかを確認する関数
-def is_form_valid():
-    required_fields = [first_name_input, last_name_input, address, license_number, mobile_number, email_address]
-    # すべての必須フィールドが空でないかどうかをチェック
-    all_fields_filled = all(field.strip() for field in required_fields)
-    # 重要情報がチェックされているかどうかを確認
-    important_info_agreed = important_info_checked
-    return all_fields_filled and important_info_agreed
-
 # 入力検証関数
 def validate_form():
     errors = []
-    if not first_name_input:
+    if not first_name_input.strip():
         errors.append("First Name is required.")
-    if not last_name_input:
+    if not last_name_input.strip():
         errors.append("Last Name is required.")
-    if not address:
+    if not address.strip():
         errors.append("Address is required.")
-    if not license_number:
+    if not license_number.strip():
         errors.append("License Number is required.")
-    if not mobile_number:
+    if not mobile_number.strip():
         errors.append("Mobile Number is required.")
-    if not email_address:
+    if not email_address.strip():
         errors.append("Email Address is required.")
     if not important_info_checked:
         errors.append("You must agree to the Important Information.")
     return errors
 
-# 「Submit」ボタン。すべての条件が満たされている場合のみ有効化
+# 「Submit」ボタン
 if st.button("Submit"):
-    # ユーザー入力を変数に格納
-    name = first_name_input + " " + last_name_input
-    phone = mobile_number
-    email = email_address
-    reservation_date = preferred_date.strftime("%Y-%m-%d")
-    reservation_time = preferred_timeslot
-    
-    # 予約情報をスプレッドシートに記録
-    sh = gc.open("soraiemonkeycart")
-    worksheet = sh.sheet1
-    worksheet.append_row([
-        name, address, license_number, country, phone, email, how_many_people, 
-        reservation_date, reservation_time
-    ])
-    st.success("Sent! Please Pay below to Reserve your spot. Your spots will not be confirmed until payment is made.")
-    
-    # 送信後に表示されるリンク
-    st.markdown('Please [CLICK HERE](https://buy.stripe.com/aEU022aiw2wG7WUeV5) to make a payment. (Our staff will contact you after your payment.)')
-
+    form_errors = validate_form()
+    if form_errors:
+        for error in form_errors:
+            st.error(error)
+    else:
+        # ここでフォームの送信処理を行います
+        # 予約情報をスプレッドシートに記録するなど
+        st.success("Not Done yet! Please proceed with the payment below.")
+        # 送信後に表示されるリンク
+        st.markdown('Please [CLICK HERE](https://buy.stripe.com/aEU022aiw2wG7WUeV5) to make a payment. (Our staff will contact you after your payment.)')

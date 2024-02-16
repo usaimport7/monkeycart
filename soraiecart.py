@@ -179,7 +179,7 @@ def validate_form():
     return errors
 
 # 「Submit」ボタン。すべての条件が満たされている場合のみ有効化
-if st.button("Submit", disabled=not is_form_valid()):
+if st.button("Submit"):
     # ユーザー入力を変数に格納
     name = first_name_input + " " + last_name_input
     phone = mobile_number

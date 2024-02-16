@@ -159,7 +159,7 @@ if st.button("Submit"):
     reservation_time = preferred_timeslot
     
     # 予約情報をスプレッドシートに記録
-    sh = gc.open("soraiecart")
+    sh = gc.open("soraiemonkeycart")
     worksheet = sh.sheet1
     worksheet.append_row([
         name, address, phone, email, str(how_many_people), 

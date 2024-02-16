@@ -148,7 +148,7 @@ email_address = st.text_input("Email Address")
 
 # Googleスプレッドシートの設定
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('your_json_file.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('C:\Users\ume27\my_app_monkeycart\soraiekart-f11049a5c177.json', scope)
 gc = gspread.authorize(credentials)
 worksheet = gc.open('soraiecart').sheet1
 

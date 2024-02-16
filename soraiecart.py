@@ -150,7 +150,17 @@ st.write("*If your country doesn't show up, I'm sorry but you cannot drive in Ja
 mobile_number = st.text_input("Mobile Number")
 email_address = st.text_input("Email Address")
 
-if st.button("Submit"):
+# 必須フィールドが適切に入力されているかどうかを確認する関数
+def is_form_valid():
+    required_fields = [first_name_input, last_name_input, address, license_number, mobile_number, email_address]
+    # すべての必須フィールドが空でないかどうかをチェック
+    all_fields_filled = all(field.strip() for field in required_fields)
+    # 重要情報がチェックされているかどうかを確認
+    important_info_agreed = important_info_checked
+    return all_fields_filled and important_info_agreed
+
+# 「Submit」ボタン。すべての条件が満たされている場合のみ有効化
+if st.button("Submit", disabled=not is_form_valid()):
     # ユーザー入力を変数に格納
     name = first_name_input + " " + last_name_input
     phone = mobile_number
@@ -165,7 +175,8 @@ if st.button("Submit"):
         name, address, license_number, country, phone, email, how_many_people, 
         reservation_date, reservation_time
     ])
-    st.success("Sent successfully! Please Pay below to Reserve your spot. Your spots will not be confirmed until payment is made.")
+    st.success("Sent! Please Pay below to Reserve your spot. Your spots will not be confirmed until payment is made.")
     
     # 送信後に表示されるリンク
     st.markdown('Please [CLICK HERE](https://buy.stripe.com/aEU022aiw2wG7WUeV5) to make a payment. (Our staff will contact you after your payment.)')
+

@@ -4,6 +4,19 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
 
+# Google スプレッドシートに接続
+def connect_to_gsheet(json_file, sheet_name):
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/spreadsheets",
+             "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
+    creds = ServiceAccountCredentials.from_json_keyfile_name(json_file, scope)
+    client = gspread.authorize(creds)
+    sheet = client.open(sheet_name).sheet1  # スプレッドシート名を指定
+    return sheet
+
+# スプレッドシートにデータを書き込む
+def write_to_sheet(sheet, data):
+    sheet.append_row(data)
+
 # アプリのタイトル
 st.title("Soraie Monkey Cart")
 
@@ -37,7 +50,7 @@ st.markdown("Price: ~~20000yen per person~~ Now 16500 per person with our discou
 st.subheader("Inclusions")
 st.write("""
 - English and Japanese-speaking expert guide
-- Go-kart of your choice (CAN-AM RYKER or Monkey-kart vehicle)
+- Go-kart of your choice (Your vehicle)
 - Photo
 - Bluetooth speaker
 """)
@@ -50,7 +63,7 @@ st.write("""
 """)
 
 st.subheader("Where to meet us:")
-st.write("Monkey kart Asakusa, Japan, 130-0003 Tokyo, Sumida City, Yokokawa, 4-chōme9９ Monkey-kart Asakusa shop")
+st.write("Monkey kart Asakusa, Japan, 130-0003 Tokyo, Sumida City, Yokokawa, 4-chōme9-9, Monkey-kart Asakusa shop")
 
 st.subheader("Cancellation Policy")
 st.write("You can cancel these tickets up to 7 DAYS BEFORE before the experience begins and get a full refund. Please call 03-5309-2639 for cancellation.")
@@ -146,14 +159,18 @@ email_address = st.text_input("Email Address")
 
 # Submit & Payボタン
 if st.button("Submit & Pay"):
-    # 重要情報が確認されているかどうかを確認
     if important_info_checked:
-        # ここで入力された情報を使用して支払い処理などの必要な処理を行う
+        # スプレッドシートに接続
+        sheet = connect_to_gsheet("path/to/your/json_key_file.json", "soraiemonkeycart")
+        
+        # 書き込むデータのリスト
+        data = [first_name_input, last_name_input, address, license_number, country, mobile_number, email_address, str(preferred_date), preferred_timeslot, how_many_people]
+        
+        # スプレッドシートにデータを書き込む
+        write_to_sheet(sheet, data)
+        
         st.success("Your booking has been submitted. Please proceed with the payment.")
-
         # 支払いページへのリンク
-        st.markdown("[Click here to proceed with the payment](https://example.com/payment)")
-
+        st.markdown("[Click here to proceed with the payment](https://buy.stripe.com/aEU022aiw2wG7WUeV5)")
     else:
         st.error("Please read and agree to the Important Information before submitting.")
-

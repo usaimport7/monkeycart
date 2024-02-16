@@ -4,18 +4,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
 
-# Google スプレッドシートに接続
-def connect_to_gsheet(json_file, sheet_name):
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/spreadsheets",
-             "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(json_file, scope)
-    client = gspread.authorize(creds)
-    sheet = client.open(sheet_name).sheet1  # スプレッドシート名を指定
-    return sheet
 
-# スプレッドシートにデータを書き込む
-def write_to_sheet(sheet, data):
-    sheet.append_row(data)
 
 # アプリのタイトル
 st.title("Soraie Monkey Cart")
@@ -157,20 +146,3 @@ st.write("*If your country doesn't show up, I'm sorry but you cannot drive in Ja
 mobile_number = st.text_input("Mobile Number")
 email_address = st.text_input("Email Address")
 
-# Submit & Payボタン
-if st.button("Submit & Pay"):
-    if important_info_checked:
-        # スプレッドシートに接続
-        sheet = connect_to_gsheet(r"C:\Users\ume27\my_app_monkeycart\soraiekart-f11049a5c177.json", "soraiemonkeycart")
-        
-        # 書き込むデータのリスト
-        data = [first_name_input, last_name_input, address, license_number, country, mobile_number, email_address, str(preferred_date), preferred_timeslot, how_many_people]
-        
-        # スプレッドシートにデータを書き込む
-        write_to_sheet(sheet, data)
-        
-        st.success("Your booking has been submitted. Please proceed with the payment.")
-        # 支払いページへのリンク
-        st.markdown("[Click here to proceed with the payment](https://buy.stripe.com/aEU022aiw2wG7WUeV5)")
-    else:
-        st.error("Please read and agree to the Important Information before submitting.")

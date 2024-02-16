@@ -4,7 +4,11 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
 
+# 環境変数からサービスアカウントのJSON情報を読み込む
+gcp_service_account_info = json.loads(st.secrets['GCP_SERVICE_ACCOUNT_JSON'])
 
+# gspreadに認証情報を渡してクライアントを初期化
+gc = gspread.service_account_from_dict(gcp_service_account_info)
 
 # アプリのタイトル
 st.title("Soraie Monkey Cart")
@@ -146,17 +150,22 @@ st.write("*If your country doesn't show up, I'm sorry but you cannot drive in Ja
 mobile_number = st.text_input("Mobile Number")
 email_address = st.text_input("Email Address")
 
-# Googleスプレッドシートの設定
-scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('soraiekart-f11049a5c177.json', scope)
-gc = gspread.authorize(credentials)
-worksheet = gc.open('soraiecart').sheet1
-
-# Submitボタンとリダイレクトリンクの表示
-submit = st.button('Submit', disabled=not (important_info_checked and first_name_input and last_name_input and address and license_number and mobile_number and email_address))
-
-if submit:
-    # スプレッドシートへの書き込み
-    worksheet.append_row([str(datetime.now()), first_name_input, last_name_input, address, license_number, country, preferred_date.strftime('%Y-%m-%d'), preferred_timeslot, str(how_many_people), mobile_number, email_address])
-    # ユーザーにクリック可能なリンクを表示
-    st.markdown("Thank you for submitting! Please [click here to proceed](https://buy.stripe.com/aEU022aiw2wG7WUeV5).", unsafe_allow_html=True)
+if st.button("Submit"):
+    # ユーザー入力を変数に格納
+    name = first_name_input + " " + last_name_input
+    phone = mobile_number
+    email = email_address
+    reservation_date = preferred_date.strftime("%Y-%m-%d")
+    reservation_time = preferred_timeslot
+    
+    # 予約情報をスプレッドシートに記録
+    sh = gc.open("soraiecart")
+    worksheet = sh.sheet1
+    worksheet.append_row([
+        name, address, phone, email, str(how_many_people), 
+        reservation_date, reservation_time
+    ])
+    st.success("Sent successfully! Please Pay below to Reserve your spot. Your spots will not be confirmed until payment is made.")
+    
+    # 送信後に表示されるリンク
+    st.markdown('Please [CLICK HERE](https://buy.stripe.com/5kA3ee0HW7R07WU9AN) to make a payment. (Our staff will contact you after your payment.)')

@@ -162,8 +162,8 @@ if st.button("Submit"):
     sh = gc.open("soraiemonkeycart")
     worksheet = sh.sheet1
     worksheet.append_row([
-        name, address, license_number, country, phone, email, str(how_many_people), 
-        reservation_date, reservation_time
+        name, address, license_number, country, phone, email, how_many_people, 
+        preferred_date, preferred_timeslot
     ])
     st.success("Sent successfully! Please Pay below to Reserve your spot. Your spots will not be confirmed until payment is made.")
     

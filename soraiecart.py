@@ -146,3 +146,17 @@ st.write("*If your country doesn't show up, I'm sorry but you cannot drive in Ja
 mobile_number = st.text_input("Mobile Number")
 email_address = st.text_input("Email Address")
 
+# Googleスプレッドシートの設定
+scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+credentials = ServiceAccountCredentials.from_json_keyfile_name('your_json_file.json', scope)
+gc = gspread.authorize(credentials)
+worksheet = gc.open('soraiecart').sheet1
+
+# Submitボタンとリダイレクトリンクの表示
+submit = st.button('Submit', disabled=not (important_info_checked and first_name_input and last_name_input and address and license_number and mobile_number and email_address))
+
+if submit:
+    # スプレッドシートへの書き込み
+    worksheet.append_row([str(datetime.now()), first_name_input, last_name_input, address, license_number, country, preferred_date.strftime('%Y-%m-%d'), preferred_timeslot, str(how_many_people), mobile_number, email_address])
+    # ユーザーにクリック可能なリンクを表示
+    st.markdown("Thank you for submitting! Please [click here to proceed](https://buy.stripe.com/aEU022aiw2wG7WUeV5).", unsafe_allow_html=True)

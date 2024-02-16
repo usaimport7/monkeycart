@@ -161,7 +161,7 @@ email_address = st.text_input("Email Address")
 if st.button("Submit & Pay"):
     if important_info_checked:
         # スプレッドシートに接続
-        sheet = connect_to_gsheet("path/to/your/json_key_file.json", "soraiemonkeycart")
+        sheet = connect_to_gsheet("C:\Users\ume27\my_app_monkeycart\soraiekart-f11049a5c177.json", "soraiemonkeycart")
         
         # 書き込むデータのリスト
         data = [first_name_input, last_name_input, address, license_number, country, mobile_number, email_address, str(preferred_date), preferred_timeslot, how_many_people]

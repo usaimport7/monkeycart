@@ -159,6 +159,25 @@ def is_form_valid():
     important_info_agreed = important_info_checked
     return all_fields_filled and important_info_agreed
 
+# 入力検証関数
+def validate_form():
+    errors = []
+    if not first_name_input:
+        errors.append("First Name is required.")
+    if not last_name_input:
+        errors.append("Last Name is required.")
+    if not address:
+        errors.append("Address is required.")
+    if not license_number:
+        errors.append("License Number is required.")
+    if not mobile_number:
+        errors.append("Mobile Number is required.")
+    if not email_address:
+        errors.append("Email Address is required.")
+    if not important_info_checked:
+        errors.append("You must agree to the Important Information.")
+    return errors
+
 # 「Submit」ボタン。すべての条件が満たされている場合のみ有効化
 if st.button("Submit", disabled=not is_form_valid()):
     # ユーザー入力を変数に格納

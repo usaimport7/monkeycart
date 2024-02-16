@@ -162,10 +162,10 @@ if st.button("Submit"):
     sh = gc.open("soraiemonkeycart")
     worksheet = sh.sheet1
     worksheet.append_row([
-        name, address, phone, email, str(how_many_people), 
+        name, address, license_number, country, phone, email, str(how_many_people), 
         reservation_date, reservation_time
     ])
     st.success("Sent successfully! Please Pay below to Reserve your spot. Your spots will not be confirmed until payment is made.")
     
     # 送信後に表示されるリンク
-    st.markdown('Please [CLICK HERE](https://buy.stripe.com/5kA3ee0HW7R07WU9AN) to make a payment. (Our staff will contact you after your payment.)')
+    st.markdown('Please [CLICK HERE](https://buy.stripe.com/aEU022aiw2wG7WUeV5) to make a payment. (Our staff will contact you after your payment.)')

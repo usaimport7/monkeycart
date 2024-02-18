@@ -203,5 +203,5 @@ if st.button("Submit"):
     st.success("Not Done yet! Please Pay below to Reserve your spot. Your spots will not be confirmed until payment is made.")
     
     # 送信後に表示されるリンク
-    st.markdown('Please [CLICK HERE](https://buy.stripe.com/aEU022aiw2wG7WUeV5) to make a payment. (Our staff will contact you after your payment.)')
+    st.markdown('Please [CLICK HERE](https://buy.stripe.com/3cs4ii8aob3c7WU8wM) to make a payment. (Our staff will contact you after your payment.)')
 
